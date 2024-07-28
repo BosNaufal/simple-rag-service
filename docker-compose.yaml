@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  vector_db:
+    image: docker.io/pgvector/pgvector:pg16
+    container_name: vector_db
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    environment:
+      # change this on production
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5431:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: docker.io/adminer
+    restart: always
+    depends:
+      - vector_db
+    ports:
+      - 5000:8080
+
+volumes:
+  postgres_data:
