@@ -1,4 +1,4 @@
-package config
+package app_constants
 
 var OPENAI_API_KEY = ""
 var HUGGING_FACE_TOKEN = ""

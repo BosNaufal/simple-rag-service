@@ -1,7 +1,7 @@
 package thirdparties
 
 import (
-	"bos_personal_ai/config"
+	app_constants "bos_personal_ai/env"
 	"bytes"
 	"fmt"
 	"io"
@@ -54,7 +54,7 @@ func (e *AIChatImpl) Prompt(systemPrompt string, userPrompt string, temp float32
 	url := "https://api.openai.com/v1/chat/completions"
 
 	postData := map[string]interface{}{
-		"model": config.MODEL,
+		"model": app_constants.MODEL,
 		"messages": []map[string]interface{}{
 			{
 				"role": "system",
@@ -97,7 +97,7 @@ func (e *AIChatImpl) Prompt(systemPrompt string, userPrompt string, temp float32
 
 	// Set any required headers (if needed)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", "Bearer "+config.OPENAI_API_KEY)
+	req.Header.Add("Authorization", "Bearer "+app_constants.OPENAI_API_KEY)
 
 	// Use the default HTTP client to send the request
 	client := &http.Client{}

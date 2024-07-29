@@ -1,7 +1,7 @@
 package thirdparties
 
 import (
-	"bos_personal_ai/config"
+	app_constants "bos_personal_ai/env"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -58,7 +58,7 @@ func (e *EmbeddingThirdPartyImpl) GetEmbeddingFromString(content string) (string
 
 	// Set any required headers (if needed)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", "Bearer "+config.OPENAI_API_KEY)
+	req.Header.Add("Authorization", "Bearer "+app_constants.OPENAI_API_KEY)
 
 	// Use the default HTTP client to send the request
 	client := &http.Client{}
