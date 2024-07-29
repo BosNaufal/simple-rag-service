@@ -1,7 +1,8 @@
 package config
 
 import (
-	"bos_personal_ai/services"
+	app_services "bos_personal_ai/services/apps"
+	infra_services "bos_personal_ai/services/infra"
 	thirdparties "bos_personal_ai/thirdparties"
 )
 
@@ -10,6 +11,8 @@ type ThirdParties struct {
 }
 
 type AppConfig struct {
-	ThirdParties      ThirdParties
-	KnowledgeServices services.KnowledgeServicesInterface
+	ThirdParties             ThirdParties
+	KnowledgeServices        infra_services.KnowledgeServicesInterface
+	RagService               app_services.RAGInterface
+	EmbeddedKnowledgeService app_services.EmbeddedKnowledgeServiceInterface
 }

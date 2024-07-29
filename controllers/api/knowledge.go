@@ -29,7 +29,7 @@ func (ctrl *KnowledgeController) GetKnowledge(c *fiber.Ctx) error {
 	var knowledgeList []repositories.KnowledgeEntity
 	var err error
 
-	knowledgeList, err = ctrl.app.KnowledgeServices.Find(searchQuery)
+	knowledgeList, err = ctrl.app.EmbeddedKnowledgeService.RetriveKnowledgeBySearchQuery(searchQuery)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -56,7 +56,7 @@ func (ctrl *KnowledgeController) CreateKnowledge(c *fiber.Ctx) error {
 		})
 	}
 
-	result, err := ctrl.app.KnowledgeServices.Add(input.Title, input.Content)
+	result, err := ctrl.app.EmbeddedKnowledgeService.AddNewKnowledgeWithEmbedding(input.Title, input.Content)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -84,7 +84,7 @@ func (ctrl *KnowledgeController) DeleteKnowledge(c *fiber.Ctx) error {
 		})
 	}
 
-	err = ctrl.app.KnowledgeServices.Delete(uint(targetIdUint))
+	err = ctrl.app.KnowledgeServices.DeleteKnowledge(uint(targetIdUint))
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -122,7 +122,7 @@ func (ctrl *KnowledgeController) UpdateKnowledge(c *fiber.Ctx) error {
 	}
 
 	input.ID = uint(targetIdUint)
-	updatedEntity, err := ctrl.app.KnowledgeServices.Update(*input)
+	updatedEntity, err := ctrl.app.EmbeddedKnowledgeService.UpdateKnowledgeWithEmbedding(*input)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

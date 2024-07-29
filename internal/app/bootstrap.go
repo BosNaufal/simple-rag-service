@@ -2,9 +2,9 @@ package bootstrap
 
 import (
 	"bos_personal_ai/config"
-	"bos_personal_ai/domain"
 	"bos_personal_ai/repositories"
-	"bos_personal_ai/services"
+	app_services "bos_personal_ai/services/apps"
+	infra_services "bos_personal_ai/services/infra"
 	"bos_personal_ai/thirdparties"
 
 	"gorm.io/driver/postgres"
@@ -20,20 +20,23 @@ func Bootstrap() *config.AppConfig {
 	}
 
 	openAIEmbedding := thirdparties.NewEmbeddingOpenAIEmbedding()
+
 	searchCacheRepo := repositories.NewSearchCacheRepository(db)
-	searchCacheDomain := domain.NewSearchCacheDomain(searchCacheRepo)
+	searchCacheService := infra_services.NewSearchCacheService(searchCacheRepo)
 
 	knowledgeRepo := repositories.NewKnowledgeRepository(db)
-	knowledgeDomain := domain.NewKnowledgeDomain(
-		knowledgeRepo,
-	)
-	knowledgeService := services.NewKnowledgeService(openAIEmbedding, knowledgeDomain, searchCacheDomain)
+	knowledgeService := infra_services.NewKnowledgeService(knowledgeRepo)
+
+	embeddedKnowledgeService := app_services.NewEmbeddedKnowledgeService(openAIEmbedding, knowledgeService, searchCacheService)
+	ragService := app_services.NewRAG(openAIEmbedding, embeddedKnowledgeService)
 
 	appConfig := config.AppConfig{
 		ThirdParties: config.ThirdParties{
 			Embedding: openAIEmbedding,
 		},
-		KnowledgeServices: knowledgeService,
+		KnowledgeServices:        knowledgeService,
+		RagService:               ragService,
+		EmbeddedKnowledgeService: embeddedKnowledgeService,
 	}
 
 	return &appConfig
