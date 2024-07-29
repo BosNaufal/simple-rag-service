@@ -17,18 +17,18 @@ type EmbeddedKnowledgeServiceInterface interface {
 type EmbeddedKnowledgeServiceImpl struct {
 	embeddingThirdparty thirdparties.EmbeddingThirdPartyInterface
 	knowledgeService    infra_services.KnowledgeServicesInterface
-	searchCacheService    infra_services.SearchCachesInterface
+	searchCacheService  infra_services.SearchCachesInterface
 }
 
 func NewEmbeddedKnowledgeService(
 	embeddingThirdparty thirdparties.EmbeddingThirdPartyInterface,
 	knowledgeService infra_services.KnowledgeServicesInterface,
-	searchCacheService    infra_services.SearchCachesInterface
+	searchCacheService infra_services.SearchCachesInterface,
 ) *EmbeddedKnowledgeServiceImpl {
 	return &EmbeddedKnowledgeServiceImpl{
 		embeddingThirdparty: embeddingThirdparty,
 		knowledgeService:    knowledgeService,
-		searchCacheService: searchCacheService,
+		searchCacheService:  searchCacheService,
 	}
 }
 
