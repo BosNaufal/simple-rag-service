@@ -43,5 +43,9 @@ func main() {
 	knowledge.Put("/:id", knowledgeController.UpdateKnowledge)
 	knowledge.Delete("/:id", knowledgeController.DeleteKnowledge)
 
+	askAIController := controllers.NewAskAIController(appConfig)
+	ask := v1.Group("/ask")
+	ask.Post("/", askAIController.AskAI)
+
 	log.Fatal(app.Listen(":3000"))
 }

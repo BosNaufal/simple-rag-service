@@ -20,6 +20,7 @@ func Bootstrap() *config.AppConfig {
 	}
 
 	openAIEmbedding := thirdparties.NewEmbeddingOpenAIEmbedding()
+	openAIChatService := thirdparties.NewOpenAIChatThirdParty()
 
 	searchCacheRepo := repositories.NewSearchCacheRepository(db)
 	searchCacheService := infra_services.NewSearchCacheService(searchCacheRepo)
@@ -33,6 +34,7 @@ func Bootstrap() *config.AppConfig {
 	appConfig := config.AppConfig{
 		ThirdParties: config.ThirdParties{
 			Embedding: openAIEmbedding,
+			AIChat:    openAIChatService,
 		},
 		KnowledgeServices:        knowledgeService,
 		RagService:               ragService,

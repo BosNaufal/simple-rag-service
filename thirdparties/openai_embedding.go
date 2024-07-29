@@ -1,6 +1,7 @@
 package thirdparties
 
 import (
+	"bos_personal_ai/config"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -26,8 +27,6 @@ type OpenAIEmbeddingResponse struct {
 	} `json:"data"`
 	EmbeddingString string
 }
-
-var OPENAI_API_KEY = ""
 
 func NewEmbeddingOpenAIEmbedding() *EmbeddingThirdPartyImpl {
 	return &EmbeddingThirdPartyImpl{}
@@ -59,7 +58,7 @@ func (e *EmbeddingThirdPartyImpl) GetEmbeddingFromString(content string) (string
 
 	// Set any required headers (if needed)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", "Bearer "+OPENAI_API_KEY)
+	req.Header.Add("Authorization", "Bearer "+config.OPENAI_API_KEY)
 
 	// Use the default HTTP client to send the request
 	client := &http.Client{}

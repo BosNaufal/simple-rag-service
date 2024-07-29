@@ -8,6 +8,7 @@ import (
 
 type ThirdParties struct {
 	Embedding thirdparties.EmbeddingThirdPartyInterface
+	AIChat    thirdparties.AIChatInterface
 }
 
 type AppConfig struct {
