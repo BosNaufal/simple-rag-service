@@ -40,7 +40,7 @@ func (e *EmbeddingThirdPartyImpl) GetEmbeddingFromString(content string) (string
 	url := "https://api.openai.com/v1/embeddings"
 
 	postData := map[string]string{
-		"input": "Your text string goes here",
+		"input": content,
 		"model": "text-embedding-3-small",
 	}
 
