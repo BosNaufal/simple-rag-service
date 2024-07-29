@@ -29,7 +29,7 @@ func Bootstrap() *config.AppConfig {
 	knowledgeService := infra_services.NewKnowledgeService(knowledgeRepo)
 
 	embeddedKnowledgeService := app_services.NewEmbeddedKnowledgeService(openAIEmbedding, knowledgeService, searchCacheService)
-	ragService := app_services.NewRAG(openAIEmbedding, embeddedKnowledgeService)
+	ragService := app_services.NewRAG(openAIEmbedding, openAIChatService, embeddedKnowledgeService)
 
 	appConfig := config.AppConfig{
 		ThirdParties: config.ThirdParties{
