@@ -3,7 +3,6 @@ package thirdparties
 import (
 	app_constants "bos_personal_ai/env"
 	"bytes"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -122,7 +121,6 @@ func (e *AIChatImpl) Prompt(systemPrompt string, userPrompt string, temp float32
 		return "", err
 	}
 
-	fmt.Println(data)
 	aiResponse := data.Choices[0].Message.Content
 
 	return aiResponse, nil

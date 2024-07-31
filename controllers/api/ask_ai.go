@@ -79,10 +79,8 @@ func (ctrl *AskAIController) AskRAG(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"is_error": false,
-		"data": map[string]interface{}{
-			"answer": aiAnswer,
-		},
-		"success": true,
-		"message": "successfully created",
+		"data":     aiAnswer,
+		"success":  true,
+		"message":  "successfully created",
 	})
 }

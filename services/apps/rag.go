@@ -2,10 +2,19 @@ package app_services
 
 import (
 	"bos_personal_ai/thirdparties"
+	"regexp"
+	"strings"
 )
 
+type RAGOutput struct {
+	RawAnswer     string   `json:"raw_answer"`
+	Answer        string   `json:"answer"`
+	RawReferences string   `json:"raw_references"`
+	References    []string `json:"references"`
+}
+
 type RAGInterface interface {
-	AskQuestion(question string) (string, error)
+	AskQuestion(question string) (RAGOutput, error)
 }
 
 type RAGImpl struct {
@@ -26,7 +35,7 @@ func NewRAG(
 	}
 }
 
-func (srv *RAGImpl) AskQuestion(question string) (string, error) {
+func (srv *RAGImpl) AskQuestion(question string) (RAGOutput, error) {
 
 	systemPrompt := `
 	you're helpful personal assistant.
@@ -79,12 +88,12 @@ func (srv *RAGImpl) AskQuestion(question string) (string, error) {
 	**REFERENCES**
 	- none
 
-	Provide answer as same as the example format. BEGIN!
+	Provide answer with format as same as the example format. BEGIN!
 		`
 
 	knowledgeList, err := srv.embeddedKnowledgeService.RetriveKnowledgeBySearchQuery(question)
 	if err != nil {
-		return "", err
+		return RAGOutput{}, err
 	}
 
 	var allKnowledgeTextString string
@@ -100,14 +109,34 @@ func (srv *RAGImpl) AskQuestion(question string) (string, error) {
 		` + question + `
 		`
 
-	result, err := srv.aiChatThirdparty.Prompt(systemPrompt, userPrompt, 0.2, 1000)
+	rawAnswer, err := srv.aiChatThirdparty.Prompt(systemPrompt, userPrompt, 0.2, 1000)
 	if err != nil {
-		return "", err
+		return RAGOutput{}, err
 	}
 
-	// re := regexp.MustCompile(`(\d+)-(\d+)`)
-	// submatches := re.FindStringSubmatch("123-456")
-	// fmt.Println(submatches) // [123-456 123 456]
+	// references: https://stackoverflow.com/a/39102969 (how to get string on submatch regex golang)
+	re := regexp.MustCompile(`(?mi)ANSWER:\s([^+]+)\s---\s\*\*REFERENCES\*\*\s([^+]+)`)
+	matches := re.FindAllStringSubmatch(rawAnswer, -1)
 
-	return result, nil
+	cleanAnswer := strings.TrimSpace(matches[0][1])
+	rawReferences := strings.TrimSpace(matches[0][2])
+
+	var references []string
+	if len(rawReferences) > 0 {
+		splitLinks := strings.Split(rawReferences, "\n")
+		for _, link := range splitLinks {
+			cleanLink := strings.TrimSpace(link)
+			cleanLink = strings.TrimPrefix(cleanLink, "- ")
+			references = append(references, cleanLink)
+		}
+	}
+
+	output := RAGOutput{
+		RawAnswer:     rawAnswer,
+		Answer:        cleanAnswer,
+		RawReferences: rawReferences,
+		References:    references,
+	}
+
+	return output, nil
 }
