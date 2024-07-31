@@ -115,11 +115,17 @@ func (srv *RAGImpl) AskQuestion(question string) (RAGOutput, error) {
 	}
 
 	// references: https://stackoverflow.com/a/39102969 (how to get string on submatch regex golang)
-	re := regexp.MustCompile(`(?mi)ANSWER:\s([^+]+)\s---\s\*\*REFERENCES\*\*\s([^+]+)`)
+	re := regexp.MustCompile(`(?mi)(ANSWER|):\s([^+]+)\s---\s\*\*REFERENCES\*\*\s([^+]+)`)
 	matches := re.FindAllStringSubmatch(rawAnswer, -1)
 
-	cleanAnswer := strings.TrimSpace(matches[0][1])
-	rawReferences := strings.TrimSpace(matches[0][2])
+	if len(matches) == 0 {
+		return RAGOutput{
+			RawAnswer: rawAnswer,
+		}, nil
+	}
+
+	cleanAnswer := strings.TrimSpace(matches[0][2])
+	rawReferences := strings.TrimSpace(matches[0][3])
 
 	var references []string
 	if len(rawReferences) > 0 {

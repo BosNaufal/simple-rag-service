@@ -14,7 +14,7 @@ type AIChatInterface interface {
 	Prompt(systemPrompt string, userPrompt string, temp float32, maxToken int) (string, error)
 }
 
-type AIChatImpl struct {
+type OpenAIChatImpl struct {
 }
 
 type Choice struct {
@@ -43,17 +43,17 @@ type CompletionResponse struct {
 	SystemFingerprint string   `json:"system_fingerprint"`
 }
 
-func NewOpenAIChatThirdParty() *AIChatImpl {
-	return &AIChatImpl{}
+func NewOpenAIChatThirdParty() AIChatInterface {
+	return &OpenAIChatImpl{}
 }
 
-func (e *AIChatImpl) Prompt(systemPrompt string, userPrompt string, temp float32, maxToken int) (string, error) {
+func (e *OpenAIChatImpl) Prompt(systemPrompt string, userPrompt string, temp float32, maxToken int) (string, error) {
 	var data CompletionResponse
 
 	url := "https://api.openai.com/v1/chat/completions"
 
 	postData := map[string]interface{}{
-		"model": app_constants.MODEL,
+		"model": "gpt-4o-mini",
 		"messages": []map[string]interface{}{
 			{
 				"role": "system",
