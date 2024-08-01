@@ -17,7 +17,7 @@ type KnowledgeServicesImpl struct {
 
 func NewKnowledgeService(
 	knowledgeRepo repositories.KnowledgeRepositoryInterface,
-) *KnowledgeServicesImpl {
+) KnowledgeServicesInterface {
 	return &KnowledgeServicesImpl{
 		knowledgeRepo: knowledgeRepo,
 	}

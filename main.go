@@ -45,7 +45,6 @@ func main() {
 
 	askAIController := controllers.NewAskAIController(appConfig)
 	ask := v1.Group("/ask")
-	ask.Post("/", askAIController.AskAI)
 	ask.Post("/rag", askAIController.AskRAG)
 
 	log.Fatal(app.Listen(":3000"))

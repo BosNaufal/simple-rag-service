@@ -24,7 +24,7 @@ func NewEmbeddedKnowledgeService(
 	embeddingThirdparty thirdparties.EmbeddingThirdPartyInterface,
 	knowledgeService infra_services.KnowledgeServicesInterface,
 	searchCacheService infra_services.SearchCachesInterface,
-) *EmbeddedKnowledgeServiceImpl {
+) EmbeddedKnowledgeServiceInterface {
 	return &EmbeddedKnowledgeServiceImpl{
 		embeddingThirdparty: embeddingThirdparty,
 		knowledgeService:    knowledgeService,

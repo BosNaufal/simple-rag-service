@@ -1,6 +1,7 @@
 package app_services
 
 import (
+	infra_services "bos_personal_ai/services/infra"
 	"bos_personal_ai/thirdparties"
 	"regexp"
 	"strings"
@@ -14,28 +15,28 @@ type RAGOutput struct {
 }
 
 type RAGInterface interface {
-	AskQuestion(question string) (RAGOutput, error)
+	AskQuestion(modelProvider string, question string) (RAGOutput, error)
 }
 
 type RAGImpl struct {
 	embeddingThirdparty      thirdparties.EmbeddingThirdPartyInterface
-	aiChatThirdparty         thirdparties.AIChatInterface
+	aiChatService            infra_services.AIChatServiceInterface
 	embeddedKnowledgeService EmbeddedKnowledgeServiceInterface
 }
 
 func NewRAG(
 	embeddingThirdparty thirdparties.EmbeddingThirdPartyInterface,
-	aiChatThirdparty thirdparties.AIChatInterface,
+	aiChatService infra_services.AIChatServiceInterface,
 	embeddedKnowledgeService EmbeddedKnowledgeServiceInterface,
-) *RAGImpl {
+) RAGInterface {
 	return &RAGImpl{
 		embeddingThirdparty:      embeddingThirdparty,
-		aiChatThirdparty:         aiChatThirdparty,
+		aiChatService:            aiChatService,
 		embeddedKnowledgeService: embeddedKnowledgeService,
 	}
 }
 
-func (srv *RAGImpl) AskQuestion(question string) (RAGOutput, error) {
+func (srv *RAGImpl) AskQuestion(modelProvider string, question string) (RAGOutput, error) {
 
 	systemPrompt := `
 	you're helpful personal assistant.
@@ -109,7 +110,7 @@ func (srv *RAGImpl) AskQuestion(question string) (RAGOutput, error) {
 		` + question + `
 		`
 
-	rawAnswer, err := srv.aiChatThirdparty.Prompt(systemPrompt, userPrompt, 0.2, 1000)
+	rawAnswer, err := srv.aiChatService.Prompt(modelProvider, systemPrompt, userPrompt, 0.2, 1000)
 	if err != nil {
 		return RAGOutput{}, err
 	}

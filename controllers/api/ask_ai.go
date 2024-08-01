@@ -11,7 +11,8 @@ type AskAIInput struct {
 }
 
 type AskRAGInput struct {
-	Question string `json:"question" xml:"question" form:"question"`
+	ModelProvider string `json:"model_provider" xml:"model_provider" form:"model_provider"`
+	Question      string `json:"question" xml:"question" form:"question"`
 }
 
 type AskAIController struct {
@@ -24,40 +25,6 @@ func NewAskAIController(app *config.AppConfig) *AskAIController {
 	}
 }
 
-func (ctrl *AskAIController) AskAI(c *fiber.Ctx) error {
-	input := new(AskAIInput)
-
-	if err := c.BodyParser(input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"is_error": true,
-			"message":  "error when parsing payload: " + err.Error(),
-		})
-	}
-
-	aiAnswer, err := ctrl.app.ThirdParties.AIChat.Prompt(
-		"You're helpfull assistant",
-		input.Prompt,
-		0.2,
-		255,
-	)
-
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"is_error": true,
-			"message":  "error when ask to AI: " + err.Error(),
-		})
-	}
-
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"is_error": false,
-		"data": map[string]interface{}{
-			"answer": aiAnswer,
-		},
-		"success": true,
-		"message": "successfully created",
-	})
-}
-
 func (ctrl *AskAIController) AskRAG(c *fiber.Ctx) error {
 	input := new(AskRAGInput)
 
@@ -68,7 +35,7 @@ func (ctrl *AskAIController) AskRAG(c *fiber.Ctx) error {
 		})
 	}
 
-	aiAnswer, err := ctrl.app.RagService.AskQuestion(input.Question)
+	aiAnswer, err := ctrl.app.RagService.AskQuestion("openai", input.Question)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

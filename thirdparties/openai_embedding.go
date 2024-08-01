@@ -28,7 +28,7 @@ type OpenAIEmbeddingResponse struct {
 	EmbeddingString string
 }
 
-func NewEmbeddingOpenAIEmbedding() *EmbeddingThirdPartyImpl {
+func NewEmbeddingOpenAIEmbedding() EmbeddingThirdPartyInterface {
 	return &EmbeddingThirdPartyImpl{}
 }
 

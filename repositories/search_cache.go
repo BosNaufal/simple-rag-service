@@ -21,7 +21,7 @@ type SearchCacheEntity struct {
 	Embedding string `json:"embedding"`
 }
 
-func NewSearchCacheRepository(db *gorm.DB) *SearchCacheRepositoryImpl {
+func NewSearchCacheRepository(db *gorm.DB) SearchCacheRepositoryInterface {
 	return &SearchCacheRepositoryImpl{
 		db: db,
 	}

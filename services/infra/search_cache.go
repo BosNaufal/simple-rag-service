@@ -17,7 +17,7 @@ type SearchCachesImpl struct {
 
 func NewSearchCacheService(
 	repo repositories.SearchCacheRepositoryInterface,
-) *SearchCachesImpl {
+) SearchCachesInterface {
 	return &SearchCachesImpl{
 		repo: repo,
 	}

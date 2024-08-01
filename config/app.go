@@ -13,6 +13,7 @@ type ThirdParties struct {
 
 type AppConfig struct {
 	ThirdParties             ThirdParties
+	AIChatService            infra_services.AIChatServiceInterface
 	KnowledgeServices        infra_services.KnowledgeServicesInterface
 	RagService               app_services.RAGInterface
 	EmbeddedKnowledgeService app_services.EmbeddedKnowledgeServiceInterface
