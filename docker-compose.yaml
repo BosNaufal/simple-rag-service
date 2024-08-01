@@ -17,7 +17,7 @@ services:
   adminer:
     image: docker.io/adminer
     restart: always
-    depends:
+    depends_on:
       - vector_db
     ports:
       - 5000:8080
