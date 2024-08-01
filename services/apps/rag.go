@@ -110,7 +110,12 @@ func (srv *RAGImpl) AskQuestion(modelProvider string, question string) (RAGOutpu
 		` + question + `
 		`
 
-	rawAnswer, err := srv.aiChatService.Prompt(modelProvider, systemPrompt, userPrompt, 0.2, 1000)
+	validModelProvider := "openai"
+	if modelProvider != "" {
+		validModelProvider = modelProvider
+	}
+
+	rawAnswer, err := srv.aiChatService.Prompt(validModelProvider, systemPrompt, userPrompt, 0.2, 1000)
 	if err != nil {
 		return RAGOutput{}, err
 	}

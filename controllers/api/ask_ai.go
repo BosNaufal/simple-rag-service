@@ -35,7 +35,7 @@ func (ctrl *AskAIController) AskRAG(c *fiber.Ctx) error {
 		})
 	}
 
-	aiAnswer, err := ctrl.app.RagService.AskQuestion("openai", input.Question)
+	aiAnswer, err := ctrl.app.RagService.AskQuestion(input.ModelProvider, input.Question)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
