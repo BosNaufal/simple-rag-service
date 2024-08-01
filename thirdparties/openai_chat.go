@@ -3,11 +3,10 @@ package thirdparties
 import (
 	app_constants "bos_personal_ai/env"
 	"bytes"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/bytedance/sonic"
 )
 
 type AIChatInterface interface {
@@ -81,7 +80,7 @@ func (e *OpenAIChatImpl) Prompt(systemPrompt string, userPrompt string, temp flo
 		"presence_penalty":  0,
 	}
 
-	jsonData, err := sonic.Marshal(postData)
+	jsonData, err := json.Marshal(postData)
 	if err != nil {
 		log.Fatalf("Failed to marshal JSON: %v", err)
 		return "", err
@@ -115,7 +114,7 @@ func (e *OpenAIChatImpl) Prompt(systemPrompt string, userPrompt string, temp flo
 	}
 
 	// Parse the JSON response
-	err = sonic.Unmarshal(body, &data)
+	err = json.Unmarshal(body, &data)
 	if err != nil {
 		log.Printf("Failed to unmarshal response: %v", err)
 		return "", err

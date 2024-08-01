@@ -7,8 +7,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/bytedance/sonic"
 )
 
 type EmbeddingThirdPartyInterface interface {
@@ -43,7 +41,7 @@ func (e *EmbeddingThirdPartyImpl) GetEmbeddingFromString(content string) (string
 		"model": "text-embedding-3-small",
 	}
 
-	jsonData, err := sonic.Marshal(postData)
+	jsonData, err := json.Marshal(postData)
 	if err != nil {
 		log.Fatalf("Failed to marshal JSON: %v", err)
 		return "", err
@@ -77,7 +75,7 @@ func (e *EmbeddingThirdPartyImpl) GetEmbeddingFromString(content string) (string
 	}
 
 	// Parse the JSON response
-	sonic.Unmarshal(body, &data)
+	json.Unmarshal(body, &data)
 	embeddingString := string(data.Data[0].Embedding)
 
 	return embeddingString, nil
